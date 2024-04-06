@@ -1,4 +1,4 @@
-use embedded_hal::blocking::delay::DelayMs;
+use esp_hal::prelude::_embedded_hal_blocking_delay_DelayMs as DelayMs;
 
 #[repr(u8)]
 #[derive(Copy, Clone, Debug)]

@@ -13,5 +13,23 @@ A Rust DS18B20 temperature sensor driver for [embedded-hal](https://github.com/r
 """
 
 [dependencies]
-one-wire-bus = "0.1.1"
-embedded-hal = {version="0.2.3", features=["unproven"]}
+esp-one-wire-bus = { git = "https://github.com/Zovra/esp-one-wire-bus.git" }
+esp-hal = {version="0.16.1"}
+
+
+[features]
+esp32 = ["esp-hal/esp32","esp-one-wire-bus/esp32"]
+
+esp32c2 = ["esp-hal/esp32c2","esp-one-wire-bus/esp32c2"]
+
+esp32c3 = ["esp-hal/esp32c3","esp-one-wire-bus/esp32c3"]
+
+esp32c6 = ["esp-hal/esp32c6","esp-one-wire-bus/esp32c6"]
+
+esp32h2 = ["esp-hal/esp32h2","esp-one-wire-bus/esp32h2"]
+
+esp32p4 = ["esp-hal/esp32p4","esp-one-wire-bus/esp32p4"]
+
+esp32s2 = ["esp-hal/esp32s2","esp-one-wire-bus/esp32s2"]
+
+esp32s3 = ["esp-hal/esp32s3","esp-one-wire-bus/esp32s3"]

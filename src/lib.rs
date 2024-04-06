@@ -2,16 +2,17 @@
 
 //! # Test Test
 
-use embedded_hal::blocking::delay::DelayUs;
-use embedded_hal::digital::v2::{InputPin, OutputPin};
-use one_wire_bus::{self, Address, OneWire, OneWireError, OneWireResult};
+use esp_hal::prelude::_embedded_hal_blocking_delay_DelayUs as DelayUs;
+use esp_hal::prelude::_embedded_hal_digital_v2_InputPin as InputPin;
+use esp_hal::prelude::_embedded_hal_digital_v2_OutputPin as OutputPin;
+use esp_one_wire_bus::{self, Address, OneWire, OneWireError, OneWireResult};
 
 pub const FAMILY_CODE: u8 = 0x28;
 
 pub mod commands;
 mod resolution;
 
-use one_wire_bus::crc::check_crc8;
+use esp_one_wire_bus::crc::check_crc8;
 pub use resolution::Resolution;
 
 /// All of the data that can be read from the sensor.
@@ -223,7 +224,7 @@ where
     onewire.send_command(commands::RECALL_EEPROM, address, delay)?;
 
     // wait for the recall to finish (up to 10ms)
-    let max_retries = (10000 / one_wire_bus::READ_SLOT_DURATION_MICROS) + 1;
+    let max_retries = (10000 / esp_one_wire_bus::READ_SLOT_DURATION_MICROS) + 1;
     for _ in 0..max_retries {
         if onewire.read_bit(delay)? == true {
             return Ok(());
