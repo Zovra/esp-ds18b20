@@ -3,8 +3,7 @@
 //! # Test Test
 
 use esp_hal::prelude::_embedded_hal_blocking_delay_DelayUs as DelayUs;
-use esp_hal::prelude::_embedded_hal_digital_v2_InputPin as InputPin;
-use esp_hal::prelude::_embedded_hal_digital_v2_OutputPin as OutputPin;
+use esp_hal::gpio::{InputPin, OutputPin};
 use esp_one_wire_bus::{self, Address, OneWire, OneWireError, OneWireResult};
 
 pub const FAMILY_CODE: u8 = 0x28;
@@ -60,8 +59,8 @@ impl Ds18b20 {
         delay: &mut impl DelayUs<u16>,
     ) -> OneWireResult<(), E>
     where
-        T: InputPin<Error = E>,
-        T: OutputPin<Error = E>,
+        T: InputPin<>,
+        T: OutputPin<>,
     {
         onewire.send_command(commands::CONVERT_TEMP, Some(&self.address), delay)?;
         Ok(())
@@ -73,8 +72,8 @@ impl Ds18b20 {
         delay: &mut impl DelayUs<u16>,
     ) -> OneWireResult<SensorData, E>
     where
-        T: InputPin<Error = E>,
-        T: OutputPin<Error = E>,
+        T: InputPin<>,
+        T: OutputPin<>,
     {
         let data = read_data(&self.address, onewire, delay)?;
         Ok(data)
@@ -89,8 +88,8 @@ impl Ds18b20 {
         delay: &mut impl DelayUs<u16>,
     ) -> OneWireResult<(), E>
     where
-        T: InputPin<Error = E>,
-        T: OutputPin<Error = E>,
+        T: InputPin<>,
+        T: OutputPin<>,
     {
         onewire.send_command(commands::WRITE_SCRATCHPAD, Some(&self.address), delay)?;
         onewire.write_byte(alarm_temp_high.to_ne_bytes()[0], delay)?;
@@ -105,8 +104,8 @@ impl Ds18b20 {
         delay: &mut impl DelayUs<u16>,
     ) -> OneWireResult<(), E>
     where
-        T: InputPin<Error = E>,
-        T: OutputPin<Error = E>,
+        T: InputPin<>,
+        T: OutputPin<>,
     {
         save_to_eeprom(Some(&self.address), onewire, delay)
     }
@@ -117,8 +116,8 @@ impl Ds18b20 {
         delay: &mut impl DelayUs<u16>,
     ) -> OneWireResult<(), E>
     where
-        T: InputPin<Error = E>,
-        T: OutputPin<Error = E>,
+        T: InputPin<>,
+        T: OutputPin<>,
     {
         recall_from_eeprom(Some(&self.address), onewire, delay)
     }
@@ -130,8 +129,8 @@ pub fn start_simultaneous_temp_measurement<T, E>(
     delay: &mut impl DelayUs<u16>,
 ) -> OneWireResult<(), E>
 where
-    T: InputPin<Error = E>,
-    T: OutputPin<Error = E>,
+    T: InputPin<>,
+    T: OutputPin<>,
 {
     onewire.reset(delay)?;
     onewire.skip_address(delay)?;
@@ -145,8 +144,8 @@ pub fn simultaneous_recall_from_eeprom<T, E>(
     delay: &mut impl DelayUs<u16>,
 ) -> OneWireResult<(), E>
 where
-    T: InputPin<Error = E>,
-    T: OutputPin<Error = E>,
+    T: InputPin<>,
+    T: OutputPin<>,
 {
     recall_from_eeprom(None, onewire, delay)
 }
@@ -157,8 +156,8 @@ pub fn simultaneous_save_to_eeprom<T, E>(
     delay: &mut impl DelayUs<u16>,
 ) -> OneWireResult<(), E>
 where
-    T: InputPin<Error = E>,
-    T: OutputPin<Error = E>,
+    T: InputPin<>,
+    T: OutputPin<>,
 {
     save_to_eeprom(None, onewire, delay)
 }
@@ -169,8 +168,8 @@ pub fn read_scratchpad<T, E>(
     delay: &mut impl DelayUs<u16>,
 ) -> OneWireResult<[u8; 9], E>
 where
-    T: InputPin<Error = E>,
-    T: OutputPin<Error = E>,
+    T: InputPin<>,
+    T: OutputPin<>,
 {
     onewire.reset(delay)?;
     onewire.match_address(address, delay)?;
@@ -187,8 +186,8 @@ fn read_data<T, E>(
     delay: &mut impl DelayUs<u16>,
 ) -> OneWireResult<SensorData, E>
 where
-    T: InputPin<Error = E>,
-    T: OutputPin<Error = E>,
+    T: InputPin<>,
+    T: OutputPin<>,
 {
     let scratchpad = read_scratchpad(address, onewire, delay)?;
 
@@ -218,8 +217,8 @@ fn recall_from_eeprom<T, E>(
     delay: &mut impl DelayUs<u16>,
 ) -> OneWireResult<(), E>
 where
-    T: InputPin<Error = E>,
-    T: OutputPin<Error = E>,
+    T: InputPin<>,
+    T: OutputPin<>,
 {
     onewire.send_command(commands::RECALL_EEPROM, address, delay)?;
 
@@ -239,8 +238,8 @@ fn save_to_eeprom<T, E>(
     delay: &mut impl DelayUs<u16>,
 ) -> OneWireResult<(), E>
 where
-    T: InputPin<Error = E>,
-    T: OutputPin<Error = E>,
+    T: InputPin<>,
+    T: OutputPin<>,
 {
     onewire.send_command(commands::COPY_SCRATCHPAD, address, delay)?;
     delay.delay_us(10000); // delay 10ms for the write to complete
